@@ -42,6 +42,9 @@
 */
 
 #include "mcc_generated_files/mcc.h"
+#include "global_variable.h"
+
+unsigned char spiMode=0;
 
 /*
                          Main application

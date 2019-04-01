@@ -47,7 +47,7 @@
 */
 
 #include "pin_manager.h"
-
+#include "../global_variable.h"
 
 
 
@@ -67,12 +67,20 @@ void PIN_MANAGER_Initialize(void)
     TRISx registers
     */
     TRISA = 0x2F;
-    TRISB = 0xFF;
+    if(spiMode){
+        TRISB = 0xFB;
+    } else {
+        TRISB = 0xFF;
+    }
 
     /**
     ANSELx registers
     */
-    ANSELB = 0xE4;
+    if(spiMode){
+        ANSELB = 0xC0;
+    } else {
+        ANSELB = 0xE4;
+    }
     ANSELA = 0x08;
 
     /**

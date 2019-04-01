@@ -1,24 +1,24 @@
 /**
-  @Generated PIC10 / PIC12 / PIC16 / PIC18 MCUs Header File
+  SPI1 Generated Driver File
 
-  @Company:
+  @Company
     Microchip Technology Inc.
 
-  @File Name:
-    mcc.h
+  @File Name
+    spi1.c
 
-  @Summary:
-    This is the mcc.h file generated using PIC10 / PIC12 / PIC16 / PIC18 MCUs
+  @Summary
+    This is the generated driver implementation file for the SPI1 driver using PIC10 / PIC12 / PIC16 / PIC18 MCUs
 
-  @Description:
-    This header file provides implementations for driver APIs for all modules selected in the GUI.
+  @Description
+    This source file provides APIs for SPI1.
     Generation Information :
         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.76
         Device            :  PIC16F1827
-        Driver Version    :  2.00
+        Driver Version    :  1.02
     The generated drivers are tested against the following:
-        Compiler          :  XC8 2.00 or later
-        MPLAB             :  MPLAB X 5.10
+        Compiler          :  XC8 2.00
+        MPLAB 	          :  MPLAB X 5.10	
 */
 
 /*
@@ -44,61 +44,57 @@
     SOFTWARE.
 */
 
-#ifndef MCC_H
-#define	MCC_H
+/**
+  Section: Included Files
+*/
+
 #include <xc.h>
-#include "device_config.h"
-#include "pin_manager.h"
-#include <stdint.h>
-#include <stdbool.h>
-#include "interrupt_manager.h"
-#include "i2c1.h"
 #include "spi1.h"
-#include "epwm2.h"
-#include "memory.h"
-#include "tmr2.h"
 
 
-
+uint8_t (*SPI1_xchgHandler)(uint8_t);
 /**
- * @Param
-    none
- * @Returns
-    none
- * @Description
-    Initializes the device to the default states configured in the
- *                  MCC GUI
- * @Example
-    SYSTEM_Initialize(void);
- */
-void SYSTEM_Initialize(void);
+  Section: Module APIs
+*/
 
-/**
- * @Param
-    none
- * @Returns
-    none
- * @Description
-    Initializes the oscillator to the default states configured in the
- *                  MCC GUI
- * @Example
-    OSCILLATOR_Initialize(void);
- */
-void OSCILLATOR_Initialize(void);
-/**
- * @Param
-    none
- * @Returns
-    none
- * @Description
-    Initializes the WDT module to the default states configured in the
- *                  MCC GUI
- * @Example
-    WDT_Initialize(void);
- */
-void WDT_Initialize(void);
+void SPI1_Initialize(void)
+{
+    // Set the SPI1 module to the options selected in the User Interface
 
-#endif	/* MCC_H */
+    // R_nW write_noTX; P stopbit_notdetected; S startbit_notdetected; BF RCinprocess_TXcomplete; SMP High Speed; UA dontupdate; CKE Idle to Active; D_nA lastbyte_address; 
+    SSP1STAT = 0x00;
+
+    // SSPEN enabled; WCOL no_collision; CKP Idle:Low, Active:High; SSPM SCKx_nSSxenabled; SSPOV no_overflow; 
+    SSP1CON1 = 0x24;
+
+    // ACKTIM ackseq; SBCDE disabled; BOEN disabled; SCIE disabled; PCIE disabled; DHEN disabled; SDAHT 100ns; AHEN disabled; 
+    SSP1CON3 = 0x00;
+	
+	SSP1BUF = SPI1_DUMMY_DATA;
+	SPI1_setExchangeHandler(SPI1_DefaultExchangeHandler);
+	
+	PIE1bits.SSP1IE = 1;
+}
+
+
+void SPI1_ISR(void)
+{
+        SSP1BUF = SPI1_xchgHandler(SSP1BUF);
+}
+
+
+void SPI1_setExchangeHandler(uint8_t (* InterruptHandler)(uint8_t)){
+    SPI1_xchgHandler = InterruptHandler;
+}
+
+
+
+uint8_t SPI1_DefaultExchangeHandler(uint8_t byte){
+    // add your SPI1 interrupt custom code
+    // or set custom function using SPI1_setExchangeHandler()
+    return byte;
+}
+
 /**
  End of File
 */

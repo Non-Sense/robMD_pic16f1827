@@ -48,6 +48,7 @@
 
 #include "interrupt_manager.h"
 #include "mcc.h"
+#include "../global_variable.h"
 
 void __interrupt() INTERRUPT_InterruptManager (void)
 {
@@ -60,7 +61,11 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         if(PIE1bits.SSP1IE == 1 && PIR1bits.SSP1IF == 1)
         {
-            I2C1_ISR();
+            if(spiMode){
+                SPI1_ISR();
+            } else {
+                I2C1_ISR();
+            }
         } 
     }      
 }

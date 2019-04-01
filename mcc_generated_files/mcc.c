@@ -45,6 +45,8 @@
 */
 
 #include "mcc.h"
+#include "../global_variable.h"
+#include "i2c1.h"
 
 
 void SYSTEM_Initialize(void)
@@ -53,7 +55,11 @@ void SYSTEM_Initialize(void)
     PIN_MANAGER_Initialize();
     OSCILLATOR_Initialize();
     WDT_Initialize();
-    I2C1_Initialize();
+    if(spiMode){
+        SPI1_Initialize();
+    } else {
+        I2C1_Initialize();
+    }
     TMR2_Initialize();
     EPWM2_Initialize();
 }
