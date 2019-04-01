@@ -1,21 +1,26 @@
 /**
-  Generated Main Source File
+  Generated Interrupt Manager Source File
 
-  Company:
+  @Company:
     Microchip Technology Inc.
 
-  File Name:
-    main.c
+  @File Name:
+    interrupt_manager.c
 
-  Summary:
-    This is the main file generated using PIC10 / PIC12 / PIC16 / PIC18 MCUs
+  @Summary:
+    This is the Interrupt Manager file generated using PIC10 / PIC12 / PIC16 / PIC18 MCUs
 
-  Description:
-    This header file provides implementations for driver APIs for all modules selected in the GUI.
+  @Description:
+    This header file provides implementations for global interrupt handling.
+    For individual peripheral handlers please see the peripheral driver for
+    all modules selected in the GUI.
     Generation Information :
         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.76
         Device            :  PIC16F1827
-        Driver Version    :  2.00
+        Driver Version    :  2.03
+    The generated drivers are tested against the following:
+        Compiler          :  XC8 2.00 or later
+        MPLAB 	          :  MPLAB X 5.10
 */
 
 /*
@@ -41,35 +46,23 @@
     SOFTWARE.
 */
 
-#include "mcc_generated_files/mcc.h"
+#include "interrupt_manager.h"
+#include "mcc.h"
 
-/*
-                         Main application
- */
-void main(void)
+void __interrupt() INTERRUPT_InterruptManager (void)
 {
-    // initialize the device
-    SYSTEM_Initialize();
-
-    // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
-    // Use the following macros to:
-
-    // Enable the Global Interrupts
-    //INTERRUPT_GlobalInterruptEnable();
-
-    // Enable the Peripheral Interrupts
-    //INTERRUPT_PeripheralInterruptEnable();
-
-    // Disable the Global Interrupts
-    //INTERRUPT_GlobalInterruptDisable();
-
-    // Disable the Peripheral Interrupts
-    //INTERRUPT_PeripheralInterruptDisable();
-
-    while (1)
+    // interrupt handler
+    if(INTCONbits.IOCIE == 1 && INTCONbits.IOCIF == 1)
     {
-        // Add your application code
+        PIN_MANAGER_IOC();
     }
+    else if(INTCONbits.PEIE == 1)
+    {
+        if(PIE1bits.SSP1IE == 1 && PIR1bits.SSP1IF == 1)
+        {
+            I2C1_ISR();
+        } 
+    }      
 }
 /**
  End of File
