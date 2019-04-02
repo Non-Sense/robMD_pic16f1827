@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-    extern unsigned char spiMode;
+extern unsigned char spiMode;
 
 
 #ifdef	__cplusplus

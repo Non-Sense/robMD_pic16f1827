@@ -75,7 +75,7 @@ void EPWM2_Initialize(void)
 	PWM2CON = 0x80;    
 	
 	// STR2B P2B_to_CCP2M; STR2A P2A_to_CCP2M; STR2SYNC start_at_next; 
-	PSTR2CON = 0x13;    
+	PSTR2CON = 0x10;    
 	
 	// CCPR2H 0; 
 	CCPR2H = 0x00;    
@@ -94,6 +94,13 @@ void EPWM2_LoadDutyValue(uint16_t dutyValue)
     
    // Writing to 2 LSBs of pwm duty cycle in CCPCON register
     CCP2CON = ((uint8_t)(CCP2CON & 0xCF) | ((dutyValue & 0x0003)<<4));
+}
+
+void EPWM2_SetSteering(uint8_t strA, uint8_t strB, uint8_t strC, uint8_t strD){
+    PSTR1CONbits.STR1A=strA;
+    PSTR1CONbits.STR1B=strB;
+    PSTR1CONbits.STR1C=strC;
+    PSTR1CONbits.STR1D=strD;
 }
 /**
  End of File
