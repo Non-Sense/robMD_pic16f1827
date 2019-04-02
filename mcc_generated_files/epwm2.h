@@ -120,7 +120,8 @@ void EPWM2_Initialize(void);
     </code>
 */
 void EPWM2_LoadDutyValue(uint16_t dutyValue);
-        
+
+void EPWM2_SetSteering(uint8_t strA, uint8_t strB, uint8_t strC, uint8_t strD);
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     }
