@@ -72,8 +72,11 @@ void TMR2_Initialize(void)
     // Clearing IF flag.
     PIR1bits.TMR2IF = 0;
 
-    // T2CKPS 1:1; T2OUTPS 1:1; TMR2ON on; 
-    T2CON = 0x04;
+    // 0x04 T2CKPS 1:1; T2OUTPS 1:1; TMR2ON on; <- 32us  31.25kHz
+    // 0x05 T2CKPS 1:4; T2OUTPS 1:1; TMR2ON on; <- 128us 7.8125kHz
+    // 0x06 T2CKPS 1:16; T2OUTPS 1:1; TMR2ON on; <- 512us 1.95313kHz
+    // 0x07 T2CKPS 1:64; T2OUTPS 1:1; TMR2ON on; <- 2.048ms  488.28Hz
+    T2CON = 0x06;   //CKPS 1:16 OUTPS 1:1
 }
 
 void TMR2_StartTimer(void)
